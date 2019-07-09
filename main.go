@@ -46,19 +46,33 @@ func run() {
 
 		win.Clear(colornames.Blanchedalmond)
 
-		dir := 0
+		// dir := 0
 
+		// if win.Pressed(pixelgl.KeyLeft) {
+		// 	dir--
+		// }
+		// if win.Pressed(pixelgl.KeyRight) {
+		// 	dir++
+		// }
+		// if win.JustPressed(pixelgl.KeyUp) {
+		// 	if !gopher.IsJump() {
+		// 		gopher.Jump()
+		// 	}
+		// }
+
+		ctrl := pixel.ZV
 		if win.Pressed(pixelgl.KeyLeft) {
-			dir--
+			ctrl.X--
 		}
 		if win.Pressed(pixelgl.KeyRight) {
-			dir++
+			ctrl.X++
 		}
 		if win.JustPressed(pixelgl.KeyUp) {
-			gopher.Jump()
+			ctrl.Y++
 		}
 
-		gopher.Update(dir, dt)
+		// gopher.Update(dir, dt)
+		gopher.Update(ctrl, dt)
 		anim.Update(gopher, dt)
 
 		imd.Clear()

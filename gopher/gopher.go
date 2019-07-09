@@ -6,12 +6,12 @@ import (
 )
 
 // Gravity constant
-const gravity = 300
+const gravity = 700
 
 // Velocity of gopher
 var (
-	runX  float64 = 1
-	jumpY float64 = 50
+	runX  float64 = 230
+	jumpY float64 = 350
 )
 
 type Gopher struct {
@@ -33,30 +33,63 @@ func (g *Gopher) Jump() {
 	g.jump = true
 }
 
-func (g *Gopher) Update(dir int, dt float64) {
+// func (g *Gopher) Update(dir int, dt float64) {
+// 	// fmt.Print(g.body)
+// 	switch dir {
+// 	// Running forward
+// 	case 1:
+// 		g.vel.X += runX
+// 		// Running backward
+// 	case -1:
+// 		g.vel.X -= runX
+// 		// Not moving
+// 	case 0:
+// 		g.vel.X = 0
+// 	}
+// 	// Apply gravity
+// 	if g.jump {
+// 		g.vel.Y -= gravity * dt
+// 	}
+// 	// Check if hit ground
+// 	if g.body.Min.Y <= 1 {
+// 		g.vel.Y = 0
+// 		g.jump = false
+// 	}
+
+// 	g.body = g.body.Moved(g.vel.Scaled(dt))
+// }
+
+func (g *Gopher) Update(ctrl pixel.Vec, dt float64) {
 	// fmt.Print(g.body)
-	switch dir {
+	switch {
 	// Running forward
-	case 1:
-		g.vel.X += runX
+	case ctrl.X > 0:
+		g.vel.X = runX
 		// Running backward
-	case -1:
-		g.vel.X -= runX
+	case ctrl.X < 0:
+		g.vel.X = -runX
 		// Not moving
-	case 0:
+	case ctrl.X == 0:
 		g.vel.X = 0
 	}
 	// Apply gravity
 	if g.jump {
 		g.vel.Y -= gravity * dt
 	}
+
+	g.body = g.body.Moved(g.vel.Scaled(dt))
+
 	// Check if hit ground
 	if g.body.Min.Y <= 1 {
 		g.vel.Y = 0
+		g.body = g.body.Moved(pixel.V(0, 1-g.body.Min.Y))
 		g.jump = false
 	}
 
-	g.body = g.body.Moved(g.vel.Scaled(dt))
+	if !g.jump && ctrl.Y > 0 {
+		g.vel.Y = jumpY
+		g.jump = true
+	}
 }
 
 func (g *Gopher) IsJump() bool {
